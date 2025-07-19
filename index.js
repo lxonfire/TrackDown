@@ -9,16 +9,9 @@ const bot = new TelegramBot(token, { webHook: true });
 
 app.use(bodyParser.json());
 
-
-// Endpoint to set webhook automatically using request host
-app.get('/setup', (req, res) => {
-  const host = req.headers['x-forwarded-host'] || req.headers.host;
-  const protocol = req.headers['x-forwarded-proto'] || 'https';
-  const webhookUrl = `${protocol}://${host}/bot${token}`;
-  bot.setWebHook(webhookUrl)
-    .then(() => res.send(`Webhook set to: ${webhookUrl}`))
-    .catch(err => res.status(500).send(`Error setting webhook: ${err.message}`));
-});
+// ✅ Set webhook URL (must be HTTPS)
+const WEBHOOK_URL = `https://takaincome.vercel.app/bot${token}`;
+bot.setWebHook(WEBHOOK_URL);
 
 // 📩 Webhook endpoint to receive Telegram updates
 app.post(`/bot${token}`, (req, res) => {
